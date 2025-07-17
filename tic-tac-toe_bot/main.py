@@ -1,4 +1,5 @@
 from game import *
+from minimax import *
 
 
 def get_human_move():
@@ -20,9 +21,8 @@ def get_human_move():
 
 
 def play_game():
-    """Play the game between two players"""
+    """Play the game between two humans"""
     move_count = 0
-
     print_board_with_positions()
     print()
 
@@ -35,22 +35,50 @@ def play_game():
             row, col = get_human_move()
             make_move(row, col, PLAYER_X)
         else:
-            print("Player 0 turn:")
+            print("Player O turn:")
             row, col = get_human_move()
             make_move(row, col, PLAYER_O)
 
         move_count += 1
 
-    if move_count % 2 == 0:
-        print("Player O won")
-        print_board()
+    print_board()
+    winner = check_winner(gameboard)
+    if winner == PLAYER_X:
+        print("Player X won!")
+    elif winner == PLAYER_O:
+        print("Player O won!")
     else:
-        print("Player X won")
-        print_board()
+        print("It's a draw!")
 
 
 def play_with_ai():
-    print("TODO...")
+    """Play Human vs AI"""
+    move_count = 0
+    print_board_with_positions()
+    print()
+
+    while not is_game_over():
+        print_board()
+        print()
+
+        if move_count % 2 == 0:
+            print("Player X turn:")
+            row, col = get_human_move()
+            make_move(row, col, PLAYER_X)
+        else:
+            print("Waiting for AI to move:")
+            ai_make_move()
+
+        move_count += 1
+
+    print_board()
+    winner = check_winner(gameboard)
+    if winner == PLAYER_X:
+        print("Player X won!")
+    elif winner == PLAYER_O:
+        print("AI won!")
+    else:
+        print("It's a draw!")
 
 
 def game_loop():
@@ -60,15 +88,12 @@ def game_loop():
         print("2: Play with friend")
         game_mode = input("Select (1-2): ")
 
-        if game_mode == "1":
+        if game_mode == "1" or game_mode.strip() == "":
             reset_board()
             play_with_ai()
         elif game_mode == "2":
             reset_board()
             play_game()
-        elif game_mode == "":
-            reset_board()
-            play_with_ai()
         else:
             print(f"Invalid value: {game_mode}")
             continue
